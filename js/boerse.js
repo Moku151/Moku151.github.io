@@ -10,26 +10,29 @@ let x = 0;
 let y = 250;
 
 var aktienAnzahl = 0;
-var kontoStand = 10000;
-var aktuellerPreis = 100;
-var aktuelleZeit = 300;
+var kontoStand = 1500;
+var aktuellerKurs = 100;
+var secondsTillEnd = 150;
+var started = false;
 
-var intervalId;
-var sekundenInterval;
-canvas.lineJoin = "round";
+var kursInterval;
+var zeitInterval;
+//canvas.lineJoin = "round";
 canvas.beginPath();
 canvas.moveTo(x,y);
 
 function starteSpiel() {
-intervalId = setInterval(veraendereKurs, 500);
-sekundenInterval = setInterval(timer, 1000);
-document.getElementById("start").disabled = true;
-}
+    if (!started) {
+        kursInterval = setInterval(veraendereKurs, 500);
+        zeitInterval = setInterval(timer, 1000);
+        started = true;
+    }
+    }
+
 
 function aktieKaufen() {
-    if (kontoStand > aktuellerPreis) {
-        aktuellerPreis = aktuellerPreis;
-        kontoStand -= aktuellerPreis;
+    if (kontoStand >= aktuellerKurs) {
+        kontoStand -= aktuellerKurs;
         aktienAnzahl++;
         document.getElementById("kontostand").innerHTML = kontoStand.toFixed(2);
         document.getElementById("anzahlAktien").innerHTML = aktienAnzahl;
@@ -38,8 +41,7 @@ function aktieKaufen() {
 
 function aktieVerkaufen() {
     if (aktienAnzahl > 0){
-        aktuellerPreis = aktuellerPreis;
-        kontoStand = Number(kontoStand) + Number(aktuellerPreis);
+        kontoStand = Number(kontoStand) + Number(aktuellerKurs);
         aktienAnzahl--;
         document.getElementById("kontostand").innerHTML = kontoStand.toFixed(2);
         document.getElementById("anzahlAktien").innerHTML = aktienAnzahl;
@@ -47,115 +49,120 @@ function aktieVerkaufen() {
 }
 
 function veraendereKurs() {
-    canvas.lineTo(x,y);
-    x++;
-    canvas.lineWidth = 1;
-    canvas.stroke();
-    let random2 = Math.random();
-
-    if (random2 < 0.1 || random2 > 0.9) {
+    if (x > 1000) {
+        canvas.clearRect(0,0,canvas.width, canvas.height);
+        canvas.beginPath();
+        x = 0;
         return;
     }
-    if (random2 < 0.5){
+    canvas.lineTo(x,y);
+    x = x + 4;
+    canvas.stroke();
+    let randomWinLose = Math.random();
+
+    if (randomWinLose < 0.1 || randomWinLose > 0.9) {
+        return;
+    }
+    if (randomWinLose < 0.5){
         kursMinus();
     } else{
         kursPlus();
     }
-    var inhalt = document.getElementById('aktuellerKurs');
-    inhalt.innerHTML = aktuellerPreis.toFixed(2);
+    document.getElementById('aktuellerKurs').innerHTML = aktuellerKurs.toFixed(2);
 }
 function timer() {
-    aktuelleZeit--;
-    document.getElementById("zeit").innerHTML = aktuelleZeit;
-    if (aktuelleZeit == 0){
+    secondsTillEnd--;
+    document.getElementById("zeit").innerHTML = secondsTillEnd;
+    if (secondsTillEnd <= 0){
         beendeSpiel();
+        document.getElementById("userInformation").innerHTML = "Spiel beendet. Ihr Kontostand: " + kontoStand.toFixed(2);
     }
 }
 
 function beendeSpiel() {
-    clearInterval(intervalId);
-    clearInterval(sekundenInterval)
+    clearInterval(kursInterval);
+    clearInterval(zeitInterval)
 }
 
 function kursPlus() {
     let random = Math.random();
     if (random > 0.1 && random < 0.2){
         y = y - 1;
-        aktuellerPreis += 0.1;
+        aktuellerKurs += 0.1;
     }
     else if (random > 0.2 && random < 0.3){
         y = y - 2;
-        aktuellerPreis += 0.2;
+        aktuellerKurs += 0.2;
     }
     else if (random > 0.3 && random < 0.4){
         y = y - 3;
-        aktuellerPreis += 0.3;
+        aktuellerKurs += 0.3;
     }
     else if (random > 0.4 && random < 0.5){
         y = y - 4;
-        aktuellerPreis += 0.4;
+        aktuellerKurs += 0.4;
     }
     else if (random > 0.5 && random < 0.6){
         y = y - 5;
-        aktuellerPreis += 0.5;
+        aktuellerKurs += 0.5;
     }
     else if (random > 0.6 && random < 0.7){
         y = y - 6;
-        aktuellerPreis += 0.6;
+        aktuellerKurs += 0.6;
     }
     else if (random > 0.7 && random < 0.8){
         y = y - 7;
-        aktuellerPreis += 0.7;
+        aktuellerKurs += 0.7;
     }
     else if (random > 0.8 && random < 0.9){
         y = y - 8;
-        aktuellerPreis += 0.8;
+        aktuellerKurs += 0.8;
     }
     else if (random > 0.9){
         y = y - 9;
-        aktuellerPreis += 0.9;
+        aktuellerKurs += 0.9;
     }
 }
 
 function kursMinus() {
-    if (aktuellerPreis <= 0){
+    if (aktuellerKurs <= 0){
         return;
     }
     let random = Math.random();
     if (random > 0.1 && random < 0.2){
         y = y + 1;
-        aktuellerPreis -= 0.1;
+        aktuellerKurs -= 0.1;
     }
     else if (random > 0.2 && random < 0.3){
         y = y + 2;
-        aktuellerPreis -= 0.2;
+        aktuellerKurs -= 0.2;
     }
     else if (random > 0.3 && random < 0.4){
         y = y + 3;
-        aktuellerPreis -= 0.3;
+        aktuellerKurs -= 0.3;
     }
     else if (random > 0.4 && random < 0.5){
         y = y + 4;
-        aktuellerPreis -= 0.4;
+        aktuellerKurs -= 0.4;
     }
     else if (random > 0.5 && random < 0.6){
         y = y + 5;
-        aktuellerPreis -= 0.5;
+        aktuellerKurs -= 0.5;
     }
     else if (random > 0.6 && random < 0.7){
         y = y + 6;
-        aktuellerPreis -= 0.6;
+        aktuellerKurs -= 0.6;
     }
     else if (random > 0.7 && random < 0.8){
         y = y + 7;
-        aktuellerPreis -= 0.7;
+        aktuellerKurs -= 0.7;
     }
     else if (random > 0.8 && random < 0.9){
         y = y + 8;
-        aktuellerPreis -= 0.8;
+        aktuellerKurs -= 0.8;
     }
     else if (random > 0.9){
         y = y + 9;
-        aktuellerPreis -= 0.9;
+        aktuellerKurs -= 0.9;
     }
 }
