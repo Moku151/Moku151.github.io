@@ -16,8 +16,24 @@
     height: 100%;
 }
 
-#centeredText{
-    padding: 10px;
-    margin-left: 25%;
-    font-size: 75px;
+.carousel {
+    margin-top: 50px;
+}
+
+#row{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+#logo{
+    margin-top: 30px;
+    color: white;
+}
+#logoText{
+    color: white;
+    opacity: initial;
+}
+
+.big-banner {
+    /* The image used */
+    background-image: url("../images/hymalaja.jpg");
 }
